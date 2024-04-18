@@ -1,7 +1,7 @@
 import bcryptjs from "bcryptjs";
 import User from "../models/User.model.js";
 
-export const signup = async (req, res) => {
+export const signup = async (req, res, next) => {
   const { username, email, password } = req.body;
   if (!username || !email || !password) {
     return res.json({ error: "invalid entry" });
@@ -13,13 +13,6 @@ export const signup = async (req, res) => {
     await newUser.save();
     res.status(201).json("User added successfully");
   } catch (error) {
-    res.status(500).json(error.message);
+    next(error);
   }
-
-  res.json({
-    response: {
-      username,
-      email,
-    },
-  });
 };
