@@ -28,16 +28,16 @@ export default function Header() {
               About
             </li>
           </Link>
-          <Link to="/signin">
+          <Link to="/sign-in">
             <li className="hidden sm:inline text-slate-700 hover:underline">
               Sign In
             </li>
           </Link>
-          <Link to="/admin">
+          {/* <Link to="/admin">
             <li className="hidden sm:inline text-slate-700 hover:underline">
               Admin
             </li>
-          </Link>
+          </Link> */}
         </ul>
       </div>
     </header>

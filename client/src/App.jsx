@@ -13,6 +13,7 @@ import Missing from "./components/Missing";
 import About from "./pages/AboutUs";
 import SignIn from "./components/SignIn";
 import ResetPassword from "./components/ResetPassword";
+import SignUp from "./components/SignUp";
 
 function App() {
   return <AppRoutes />;
@@ -23,8 +24,8 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<Layout />}>
         {/* public routes */}
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/sign-in" element={<SignIn />} />
+        <Route path="/sign-up" element={<SignUp />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
         <Route path="/linkpage" element={<LinkPage />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
