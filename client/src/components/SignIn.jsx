@@ -1,7 +1,34 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function SignIn() {
+  const [formData, setFormData] = useState({});
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const res = await axios.post("/api/auth/signin", formData);
+      console.log("res", res);
+      setLoading(false);
+      setError(null);
+      navigate("/");
+    } catch (error) {
+      setLoading(false);
+      setError(error.response.data.message);
+    }
+  };
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -12,7 +39,7 @@ export default function SignIn() {
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-          <form className="space-y-6">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label
                 htmlFor="email"
@@ -23,6 +50,7 @@ export default function SignIn() {
               <div className="mt-2">
                 <input
                   id="email"
+                  onChange={handleChange}
                   name="email"
                   type="email"
                   placeholder="email"
@@ -50,6 +78,7 @@ export default function SignIn() {
               <div className="mt-2">
                 <input
                   id="password"
+                  onChange={handleChange}
                   name="password"
                   type="password"
                   placeholder="password"
@@ -60,12 +89,18 @@ export default function SignIn() {
               </div>
             </div>
 
+            {error ? (
+              <div className="pb-4 text-red-700 float-start">
+                Error: {error}
+              </div>
+            ) : null}
+
             <div>
               <button
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 uppercase"
               >
-                Sign in
+                {loading ? "loading..." : "Sign in"}
               </button>
             </div>
           </form>
