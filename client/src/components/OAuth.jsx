@@ -23,7 +23,7 @@ function OAuth() {
         email,
         photo: photoURL,
       });
-      dispatch(signInSuccess(res));
+      dispatch(signInSuccess(res.data));
       navigate("/");
       console.log(res);
     } catch (error) {

@@ -1,19 +1,15 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-// import RequireAuth from "./components/RequireAuth";
 import Layout from "./components/Layout";
-import LinkPage from "./components/LinkPage";
-// import Register from "./components/Register";
 import Unauthorized from "./components/Unauthorized";
 import Home from "./components/Home";
-import Editor from "./components/Editor";
-import Admin from "./components/Admin";
-import Lounge from "./components/Lounge";
 import Missing from "./components/Missing";
 import About from "./pages/AboutUs";
+import Profile from "./pages/Profile";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import ResetPassword from "./components/ResetPassword";
+import PrivateRoutes from "./components/PrivateRoutes";
 
 function App() {
   return <AppRoutes />;
@@ -27,17 +23,15 @@ function AppRoutes() {
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/resetpassword" element={<ResetPassword />} />
-        <Route path="/linkpage" element={<LinkPage />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
 
         {/* protected routes */}
-        <Route>
+        <Route element={<PrivateRoutes />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/editor" element={<Editor />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/lounge" element={<Lounge />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
+
         {/* catch all */}
         <Route path="*" element={<Missing />} />
       </Route>
