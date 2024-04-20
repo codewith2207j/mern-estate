@@ -7,10 +7,11 @@ import {
   signInFailure,
   signInSuccess,
 } from "../redux/user/userSlice";
+import OAuth from "../components/OAuth";
 
 export default function SignIn() {
   const [formData, setFormData] = useState({});
-  const { loading, error } = useSelector((state) => state.user);
+  const { currentUser, loading, error } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -29,10 +30,14 @@ export default function SignIn() {
       console.log("res", res);
       dispatch(signInSuccess(res.data));
       navigate("/");
-    } catch (error) {
-      dispatch(signInFailure(error.response.data.message));
+    } catch (err) {
+      dispatch(signInFailure(err.response.data.message));
     }
   };
+
+  console.log("error: ", error);
+  console.log("loading: ", loading);
+  console.log("currentUser: ", currentUser);
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
@@ -93,11 +98,11 @@ export default function SignIn() {
               </div>
             </div>
 
-            {error ? (
+            {/* {error && (
               <div className="pb-4 text-red-700 float-start">
                 Error: {error}
               </div>
-            ) : null}
+            )} */}
 
             <div>
               <button
@@ -109,12 +114,7 @@ export default function SignIn() {
             </div>
           </form>
           <div>
-            <button
-              type="button"
-              className="mt-4 flex w-full justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 uppercase"
-            >
-              Continue with google
-            </button>
+            <OAuth />
           </div>
 
           <div className="flex gap-2 mt-3">

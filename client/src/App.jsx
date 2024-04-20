@@ -1,9 +1,9 @@
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
-import RequireAuth from "./components/RequireAuth";
+// import RequireAuth from "./components/RequireAuth";
 import Layout from "./components/Layout";
 import LinkPage from "./components/LinkPage";
-import Register from "./components/Register";
+// import Register from "./components/Register";
 import Unauthorized from "./components/Unauthorized";
 import Home from "./components/Home";
 import Editor from "./components/Editor";
@@ -11,9 +11,9 @@ import Admin from "./components/Admin";
 import Lounge from "./components/Lounge";
 import Missing from "./components/Missing";
 import About from "./pages/AboutUs";
-import SignIn from "./components/SignIn";
+import SignIn from "./pages/SignIn";
+import SignUp from "./pages/SignUp";
 import ResetPassword from "./components/ResetPassword";
-import SignUp from "./components/SignUp";
 
 function App() {
   return <AppRoutes />;

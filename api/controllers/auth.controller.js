@@ -41,3 +41,57 @@ export const signin = async (req, res, next) => {
     next(error);
   }
 };
+
+export const google = async (req, res, next) => {
+  const { name, email, photo } = req.body;
+  const randomString = Math.random().toString(36).slice(-8);
+
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      const token = await jwt.sign({ id: user._id }, process.env.SECRET_KEY);
+      const { password: pass, ...rest } = user._doc;
+      res
+        .cookie("access-token", token, { httpOnly: true })
+        .status(200)
+        .json(rest);
+    } else {
+      console.log("new user---");
+      console.log("new user---", Math.random().toString(36).slice(-8));
+      console.log(
+        "new user---",
+        Math.random().toString(36).slice(-8) +
+          Math.random().toString(36).slice(-8)
+      );
+      const generatePassword =
+        Math.random().toString(36).slice(-8) +
+        Math.random().toString(36).slice(-8);
+      console.log("new user---2");
+      console.log("generatePassword", generatePassword);
+      const hasPassword = await bcryptjs.hash(generatePassword, 10);
+      console.log("hasPassword", hasPassword);
+      const generateUsername =
+        name.split(" ").join("").toLowerCase() +
+        Math.random().toString(36).slice(-4);
+
+      const newUser = new User({
+        username: generateUsername,
+        email: email,
+        password: hasPassword,
+        avatar: photo,
+      });
+
+      await newUser.save();
+      console.log("newUser", newUser);
+      // provide token to new user from google
+      const token = await jwt.sign({ id: newUser._id }, process.env.SECRET_KEY);
+      const { password: pass, ...rest } = newUser._doc;
+      res
+        .cookie("access-token", token, { httpOnly: true })
+        .status(200)
+        .json(rest);
+    }
+  } catch (error) {
+    next(error);
+  }
+};
