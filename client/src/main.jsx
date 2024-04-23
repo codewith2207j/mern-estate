@@ -6,6 +6,25 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { persistor, store } from "./redux/store.js";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
+import axios from "axios";
+
+axios.interceptors.request.use(
+  (config) => {
+    return config;
+  },
+  (error) => {
+    return error;
+  }
+);
+
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    return error;
+  }
+);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
