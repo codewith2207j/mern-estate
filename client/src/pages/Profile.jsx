@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 import {
   getDownloadURL,
   getStorage,
@@ -8,6 +8,11 @@ import {
   uploadBytesResumable,
 } from "firebase/storage";
 import { app } from "../firebase";
+import {
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure,
+} from "../redux/user/userSlice";
 
 export default function Profile() {
   const { currentUser, loading, error } = useSelector((state) => state.user);
@@ -16,8 +21,7 @@ export default function Profile() {
   const [filePer, setFilePer] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
-  console.log("file", file);
-  console.log("formData", formData);
+  const dispatch = useDispatch();
 
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
@@ -31,19 +35,17 @@ export default function Profile() {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         setFilePer(Math.round(progress));
-        console.log("Upload is ", progress, "% done");
       },
       (error) => {
         setFileUploadError(true);
-        console.log("error: ", error);
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) =>
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
           setFormData({
             ...formData,
             avatar: downloadUrl,
-          })
-        );
+          });
+        });
       }
     );
   };
@@ -61,8 +63,23 @@ export default function Profile() {
       [e.target.id]: e.target.value,
     });
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    try {
+      dispatch(updateUserStart());
+      const res = await axios.post(
+        `/api/user/update/${currentUser._id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      dispatch(updateUserSuccess(res.data));
+    } catch (error) {
+      dispatch(updateUserFailure(error.message));
+    }
   };
   useEffect(() => {
     setFormData({
@@ -119,6 +136,7 @@ export default function Profile() {
                   onChange={handleChange}
                   name="username"
                   type="text"
+                  defaultValue={currentUser.username}
                   autoComplete="username"
                   placeholder="username"
                   required
@@ -134,6 +152,7 @@ export default function Profile() {
                   onChange={handleChange}
                   name="email"
                   type="email"
+                  defaultValue={currentUser.email}
                   placeholder="email"
                   autoComplete="email"
                   required
@@ -167,6 +186,7 @@ export default function Profile() {
             <div>
               <button
                 type="submit"
+                disabled={loading}
                 className="flex w-full justify-center rounded-md bg-blue-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 uppercase"
               >
                 {loading ? "loading..." : "Update"}
@@ -186,6 +206,7 @@ export default function Profile() {
             <span className="text-red-700 cursor-pointer">Delete Account</span>
             <span className="text-red-700 cursor-pointer">Sign Out</span>
           </div>
+          <p>{error ? <span>{error}</span> : ""}</p>
         </div>
       </div>
     </>

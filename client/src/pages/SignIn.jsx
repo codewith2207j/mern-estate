@@ -27,7 +27,6 @@ export default function SignIn() {
     try {
       dispatch(signInStart());
       const res = await axios.post("/api/auth/signin", formData);
-      console.log("res", res);
       dispatch(signInSuccess(res.data));
       navigate("/");
     } catch (err) {
@@ -35,9 +34,6 @@ export default function SignIn() {
     }
   };
 
-  console.log("error: ", error);
-  console.log("loading: ", loading);
-  console.log("currentUser: ", currentUser);
   return (
     <>
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">

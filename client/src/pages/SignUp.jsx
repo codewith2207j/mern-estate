@@ -25,14 +25,12 @@ function SignUp() {
           "Content-Type": "application/json",
         },
       });
-      console.log("res: ", res);
       setLoading(false);
       setError(null);
       navigate("/sign-in");
     } catch (error) {
       setLoading(false);
       setError(error.message);
-      console.log("error.message", error.message);
     }
   };
   return (
