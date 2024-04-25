@@ -16,6 +16,8 @@ import {
   deleteUserStart,
   deleteUserSuccess,
   deleteUserFailure,
+  signInStart,
+  signInSuccess,
 } from "../redux/user/userSlice";
 
 export default function Profile() {
@@ -109,6 +111,17 @@ export default function Profile() {
       dispatch(deleteUserFailure(error.response.data.message));
     }
   };
+
+  const handleSignOut = async () => {
+    try {
+      dispatch(signInStart());
+      const res = await axios.get("/api/auth/signout");
+      console.log("res", res);
+      navigator("/sign-up");
+      dispatch(signInSuccess());
+    } catch (error) {}
+  };
+
   useEffect(() => {
     setFormData({
       username: currentUser.username,
@@ -237,7 +250,12 @@ export default function Profile() {
             >
               Delete Account
             </span>
-            <span className="text-red-700 cursor-pointer">Sign Out</span>
+            <span
+              className="text-red-700 cursor-pointer"
+              onClick={handleSignOut}
+            >
+              Sign Out
+            </span>
           </div>
           <p className="text-red-600 m-5">{error ? error : ""}</p>
           <p className="text-green-700 m-5">

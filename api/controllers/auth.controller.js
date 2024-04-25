@@ -42,6 +42,15 @@ export const signin = async (req, res, next) => {
   }
 };
 
+export const signout = async (req, res, next) => {
+  try {
+    res.clearCookie("access-token");
+    res.status(200).json("Sign Out Successfully");
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const google = async (req, res, next) => {
   const { name, email, photo } = req.body;
   const randomString = Math.random().toString(36).slice(-8);
