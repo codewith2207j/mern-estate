@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import {
@@ -12,6 +13,9 @@ import {
   updateUserStart,
   updateUserSuccess,
   updateUserFailure,
+  deleteUserStart,
+  deleteUserSuccess,
+  deleteUserFailure,
 } from "../redux/user/userSlice";
 
 export default function Profile() {
@@ -21,7 +25,9 @@ export default function Profile() {
   const [filePer, setFilePer] = useState(0);
   const [fileUploadError, setFileUploadError] = useState(false);
   const [formData, setFormData] = useState({});
+  const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
+  const navigator = useNavigate();
 
   const handleFileUpload = (file) => {
     const storage = getStorage(app);
@@ -38,6 +44,7 @@ export default function Profile() {
       },
       (error) => {
         setFileUploadError(true);
+        setUpdateSuccess(false);
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
@@ -77,8 +84,29 @@ export default function Profile() {
         }
       );
       dispatch(updateUserSuccess(res.data));
+      setUpdateSuccess(true);
+      // if (!res.response.data.success) {
+      //   dispatch(updateUserFailure(res.response.data.message));
+      //   setUpdateSuccess(false);
+      // } else {
+      //   dispatch(updateUserSuccess(res.data));
+      //   setUpdateSuccess(true);
+      // }
     } catch (error) {
-      dispatch(updateUserFailure(error.message));
+      dispatch(updateUserFailure(error.response.data.message));
+      setUpdateSuccess(false);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      dispatch(deleteUserStart());
+      const res = await axios.delete(`/api/user/delete/${currentUser._id}`);
+      console.log("res", res);
+      navigator("/sign-up");
+      dispatch(deleteUserSuccess());
+    } catch (error) {
+      dispatch(deleteUserFailure(error.response.data.message));
     }
   };
   useEffect(() => {
@@ -203,10 +231,18 @@ export default function Profile() {
           </div>
 
           <div className="flex justify-between mt-3">
-            <span className="text-red-700 cursor-pointer">Delete Account</span>
+            <span
+              className="text-red-700 cursor-pointer"
+              onClick={handleDeleteAccount}
+            >
+              Delete Account
+            </span>
             <span className="text-red-700 cursor-pointer">Sign Out</span>
           </div>
-          <p>{error ? <span>{error}</span> : ""}</p>
+          <p className="text-red-600 m-5">{error ? error : ""}</p>
+          <p className="text-green-700 m-5">
+            {updateSuccess ? "User updated successfully" : ""}
+          </p>
         </div>
       </div>
     </>
