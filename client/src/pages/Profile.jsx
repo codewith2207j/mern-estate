@@ -122,6 +122,10 @@ export default function Profile() {
     } catch (error) {}
   };
 
+  const handleCreateListing = () => {
+    navigator("/create-listing");
+  };
+
   useEffect(() => {
     setFormData({
       username: currentUser.username,
@@ -237,6 +241,7 @@ export default function Profile() {
           <div>
             <button
               type="button"
+              onClick={handleCreateListing}
               className="mt-5 flex w-full justify-center rounded-md bg-green-800 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-700 uppercase"
             >
               Create Listing

@@ -10,6 +10,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import ResetPassword from "./components/ResetPassword";
 import PrivateRoutes from "./components/PrivateRoutes";
+import CreateListing from "./pages/CreateListing";
 
 function App() {
   return <AppRoutes />;
@@ -30,6 +31,7 @@ function AppRoutes() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/create-listing" element={<CreateListing />} />
         </Route>
 
         {/* catch all */}
